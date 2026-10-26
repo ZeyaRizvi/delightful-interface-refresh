@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI Trip Planner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet"><style>:root{--bg:#f6f1ea;--card:#fffdf9;--tx:#1b1f2a;--mu:#6b6f7c;--bd:#e8dfd2;--pr:#1d3a5f;--ac:#e8673c;--ac2:#f2a541;--ok:#2f9e6b;--wa:#d48a1c;--er:#d1453b;--sh:0 1px 2px rgba(27,31,42,.04),0 8px 24px -12px rgba(29,58,95,.18);--gr:linear-gradient(135deg,#e8673c,#f2a541);box-sizing:border-box;color-scheme:light}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(1200px 600px at 100% -10%,#fde3cf 0,transparent 60%),var(--bg);color:var(--tx);font:14.5px/1.55 "Manrope",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+h1,h3,.big,header b{font-family:"Fraunces",Georgia,serif;letter-spacing:-.01em}
+.app{display:flex;min-height:100vh}
+aside{width:250px;background:linear-gradient(180deg,#1d3a5f,#13263f);color:#f6f1ea;padding:24px 16px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
+aside h1{font-size:21px;margin:0;color:#fff;font-weight:600}aside small{color:#a9b7cc;font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+nav{margin-top:22px}nav a{display:block;padding:10px 14px;margin-top:4px;border-radius:10px;color:#c6d1e0;text-decoration:none;font-weight:600;transition:.2s}
+nav a:hover{background:rgba(255,255,255,.07);color:#fff}
+nav a.on{background:var(--gr);color:#fff;box-shadow:0 6px 18px -6px rgba(232,103,60,.7)}
+.agent{margin-top:auto;font-size:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);border-radius:12px;padding:12px;color:#c6d1e0}.agent b{color:#fff}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ok);margin-right:6px;box-shadow:0 0 0 0 rgba(47,158,107,.6);animation:pu 2s infinite}
+@keyframes pu{70%{box-shadow:0 0 0 7px rgba(47,158,107,0)}100%{box-shadow:0 0 0 0 rgba(47,158,107,0)}}
+@keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+main{flex:1;min-width:0}
+header{display:flex;justify-content:space-between;align-items:center;padding:18px 32px;position:sticky;top:0;z-index:4;background:rgba(246,241,234,.8);backdrop-filter:blur(10px);border-bottom:1px solid var(--bd)}
+header b{font-size:24px;font-weight:600}.pg{padding:28px 32px;max-width:1120px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:18px;box-shadow:var(--sh);padding:22px;margin-bottom:18px;animation:up .35s ease both;transition:transform .2s,box-shadow .2s}
+.grid>.card:hover{transform:translateY(-2px);box-shadow:0 14px 30px -14px rgba(29,58,95,.3)}
+.card h3{margin:0 0 14px;font-size:19px;font-weight:600}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+.badge{display:inline-block;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:700;background:#e3ecf7;color:#1d3a5f;letter-spacing:.02em}
+.b-ok{background:#dcf2e6;color:#1f6e4a}.b-wa{background:#fcebd2;color:#8a5208}.b-er{background:#fbe0dd;color:#9b2c24}
+.flow{display:flex;gap:8px;flex-wrap:wrap;align-items:center;color:var(--mu)}
+.step{padding:8px 14px;border-radius:99px;background:var(--bg);border:1px solid var(--bd);font-weight:700;font-size:12px;color:var(--tx);transition:.3s}
+.step.on{background:var(--gr);color:#fff;border-color:transparent;box-shadow:0 6px 16px -6px rgba(232,103,60,.7)}
+.big{font-size:40px;font-weight:600;color:var(--pr);line-height:1.1;margin-top:4px}.mu{color:var(--mu)}
+.btn{background:var(--pr);color:#fff;border:0;border-radius:99px;padding:10px 20px;font:700 13px "Manrope",sans-serif;cursor:pointer;text-decoration:none;display:inline-block;transition:transform .15s,box-shadow .2s,background .2s}
+.btn:hover{transform:translateY(-1px);box-shadow:0 8px 18px -8px rgba(29,58,95,.6)}
+a.btn[href="#plan"],a.btn[href^="#trip-goa"],#cf .btn{background:var(--gr)}
+.btn.s{background:transparent;color:var(--pr);border:1px solid var(--bd);padding:7px 16px}.btn.s:hover{background:var(--bg);box-shadow:none}
+label{display:block;font-size:11px;font-weight:700;color:var(--mu);margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em}
+input,select,textarea{width:100%;padding:11px 13px;border:1px solid var(--bd);border-radius:12px;background:#fff;color:var(--tx);font:inherit;transition:border .2s,box-shadow .2s}
+input:focus,select:focus,textarea:focus{outline:0;border-color:var(--ac);box-shadow:0 0 0 4px rgba(232,103,60,.15)}
+.wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:520px}
+th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--bd);font-size:13px}th{color:var(--mu);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.06em}
+tr:hover td{background:rgba(232,103,60,.04)}code{font-size:12px;background:var(--bg);padding:2px 6px;border-radius:6px}
+.tabs{display:flex;gap:6px;overflow-x:auto;margin-bottom:18px;padding:5px;background:var(--card);border:1px solid var(--bd);border-radius:99px;width:fit-content;max-width:100%}
+.tab{padding:8px 14px;border-radius:99px;color:var(--mu);cursor:pointer;white-space:nowrap;font-weight:700;font-size:12px;transition:.2s}
+.tab:hover{color:var(--tx)}.tab.on{background:var(--pr);color:#fff}
+.bar{height:8px;border-radius:9px;background:var(--bd);overflow:hidden;min-width:90px}.bar i{display:block;height:100%;background:var(--gr);border-radius:9px}
+pre{background:#13263f;color:#ffd9c2;padding:14px;border-radius:12px;overflow-x:auto;font-size:12px;margin:8px 0}
+.tl{border-left:2px dashed var(--bd);margin-left:6px;padding-left:18px}.tl div{margin-bottom:14px;position:relative}
+.tl div:before{content:"";position:absolute;left:-25px;top:5px;width:12px;height:12px;border-radius:50%;background:var(--card);border:3px solid var(--ac)}
+.win td{background:#eef8f2!important}.win td:first-child{box-shadow:inset 3px 0 0 var(--ok);font-weight:700}
+.mob{display:none}
+.chat{position:fixed;left:250px;right:0;bottom:0;z-index:6;padding:12px 32px 16px;background:linear-gradient(180deg,transparent,var(--bg) 30%)}
+.chat>*{max-width:1056px}
+.cl{max-height:130px;overflow-y:auto;margin-bottom:8px;font-size:13px;background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:10px 14px;box-shadow:var(--sh)}.cl .m{padding:4px 0}.cl .a{color:var(--pr)}
+.chips{display:flex;gap:6px;overflow-x:auto;margin-bottom:8px}.chips span{padding:5px 12px;border:1px solid var(--bd);background:var(--card);border-radius:99px;font-size:12px;color:var(--mu);cursor:pointer;white-space:nowrap;font-weight:600;transition:.2s}
+.chips span:hover{border-color:var(--ac);color:var(--ac)}
+#cf{display:flex;gap:8px;background:var(--card);border:1px solid var(--bd);border-radius:99px;padding:6px 6px 6px 8px;box-shadow:0 12px 30px -14px rgba(29,58,95,.35)}
+#cf input{border:0;background:transparent;box-shadow:none}main{padding-bottom:260px}
+@media(max-width:760px){aside{display:none}.pg,header{padding:14px 16px}header b{font-size:20px}.big{font-size:32px}
+.mob{display:flex;position:fixed;bottom:0;left:0;right:0;background:#13263f;padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));z-index:7}
+.mob a{flex:1;text-align:center;padding:9px;color:#a9b7cc;text-decoration:none;font-weight:700;font-size:12px;border-radius:10px}.mob a.on{color:#fff;background:var(--gr)}
+.chat{left:0;bottom:calc(52px + env(safe-area-inset-bottom,0px));padding:8px 14px}}
+</style></head><body>
+<div class="app">
+<aside><h1>✈ AI Trip Planner</h1><small>Autonomous Travel Agent</small><nav id="nav"></nav>
+<div class="agent"><b>AI Agent</b><br><span class="dot"></span>ONLINE</div></aside>
+<main><header><b id="ttl"></b><span class="mu"><span class="dot"></span>Agent online · 🔔 <span class="badge b-wa" id="nt">1</span></span></header>
+<div class="pg" id="v"></div></main></div>
+<div class="mob" id="mob"></div>
+<div class="chat"><div id="cl" class="cl" hidden></div><div class="chips" id="cq"></div><form id="cf"><input id="ci" placeholder="Chat with the agent… e.g. “it’s raining” or “budget 400”" autocomplete="off"><button class="btn">Send</button></form></div>
+<script>
+const R=[["","Dashboard"],["plan","Plan Trip"],["lab","Agent Lab"]];
+const trips=[{id:"goa",to:"Goa",d:"12–16 Nov",b:600,st:"Planned"},{id:"jaipur",to:"Jaipur",d:"3–6 Dec",b:450,st:"Monitoring"}];
+const days=[["Day 1",["Arrive & check in — Beachside Hotel","Old Goa churches walk","Local seafood dinner"]],["Day 2",["Fort Aguada visit","Beach sunset (outdoor)","Night market"]],["Day 3",["Spice plantation tour","Spa & rest","Departure prep"]]];
+const rules=[["HEAVY_RAIN","BAD_WEATHER","REPLAN_OUTDOOR_ACTIVITY"],["FLIGHT_DELAY>2h","SCHEDULE_RISK","SHIFT_CHECKIN"],["PRICE_DROP>15%","GOOD_DEAL","REBOOK_OPTION"],["HOTEL_SOLD_OUT","NO_AVAILABILITY","SEARCH_ALTERNATIVE"]];
+const workers=[["Weather Worker",1800,"WEATHER_UPDATE"],["Flight Worker",950,"FLIGHT_STATUS"],["Price Worker",1240,"PRICE_CHANGE"]];
+const opts=[["Direct flight · IndiGo",420,2.5,.7,.6],["Direct flight · Air India",510,2.5,.8,.8],["Flight + 1 stop",330,6,.5,.4],["Premium flight",780,2.4,.9,1],["Train · AC 1st",180,10,.6,.7],["Train · Sleeper",90,14,.5,.3],["Volvo bus",120,11,.4,.5],["Flight + train",300,8,.6,.5],["Self-drive cab",260,9,.7,.6],["Private charter",1200,2,.9,1]];
+let BUD=600,MAXH=12;const W={c:.4,t:.25,p:.2,k:.15};
+let S={tab:"1.2",replan:false,ev:0,tick:0,neg:0};
+const $=s=>document.querySelector(s);
+const bad=(c,t)=>`<span class="badge ${c}">${t}</span>`;
+function scored(){return opts.map(o=>{const [n,c,h,p,k]=o;const why=c>BUD?`Cost ${c} > budget ${BUD}`:h>MAXH?`Travel ${h}h > limit ${MAXH}h`:"";const u=why?null:W.c*(1-c/BUD)+W.t*(1-h/MAXH)+W.p*p+W.k*k;return{n,c,h,p,k,why,u}})}
+function dash(){return `<div class="card"><h3>Agent lifecycle</h3><div class="flow">${["Perceive","Reason","Act","Monitor","Re-plan"].map((s,i)=>`<span class="step ${i==S.tick%5?"on":""}">${s}</span>${i<4?"→":"↻"}`).join("")}</div></div>
+<div class="grid"><div class="card"><div class="mu">Active trips</div><div class="big">2</div></div><div class="card"><div class="mu">Workers running</div><div class="big">3</div></div><div class="card"><div class="mu">Re-plans today</div><div class="big">${S.replan?2:1}</div></div></div>
+<div class="card"><h3>Your trips</h3>${trips.map(t=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--bd)"><div><b>${t.to}</b> <span class="mu">${t.d} · budget $${t.b}</span></div><div>${bad(t.st=="Planned"?"b-ok":"",t.st)} <a class="btn s" href="#trip-${t.id}">Open</a></div></div>`).join("")}<p><a class="btn" href="#plan">+ Plan new trip</a></p></div>`}
+function plan(){return `<div class="card"><h3>Tell the agent your goals</h3><div class="grid">
+${[["Origin","Chennai"],["Destination","Goa"],["Start date","2026-11-12","date"],["End date","2026-11-16","date"],["Budget (USD)","600","number"]].map(f=>`<div><label>${f[0]}</label><input type="${f[2]||"text"}" value="${f[1]}"></div>`).join("")}
+${[["Interests",["Beaches","Culture","Food","Adventure"]],["Transport",["Flight","Train","Bus","Any"]],["Stay",["Hotel","Hostel","Resort"]],["Pace",["Relaxed","Balanced","Packed"]]].map(f=>`<div><label>${f[0]}</label><select>${f[1].map(o=>`<option>${o}</option>`).join("")}</select></div>`).join("")}</div>
+<label style="margin-top:12px">Additional preferences</label><textarea rows="2" placeholder="e.g. vegetarian food, avoid early mornings"></textarea>
+<p><a class="btn" href="#trip-goa">Generate itinerary</a></p></div>`}
+function trip(id){const t=trips.find(x=>x.id==id)||trips[0];
+return `<div class="card"><h3>${t.to} · ${t.d}</h3><span class="badge">Budget $${t.b}</span> ${bad("b-ok","Utility-optimized")} ${S.replan?bad("b-wa","Re-planned: heavy rain Day 2"):""}
+<p class="mu">Agent reasoning: selected the best feasible transport and stay under budget, then scheduled activities by preference and weather.</p>
+<button class="btn" data-a="replan">${S.replan?"Undo weather event":"Simulate heavy rain (Day 2)"}</button></div>
+${days.map((d,i)=>`<div class="card"><h3>${d[0]}</h3><div class="tl">${d[1].map(a=>{const sw=S.replan&&a.includes("outdoor");return `<div>${sw?"🏛 Maritime museum (indoor) "+bad("b-wa","replaced"):a}</div>`}).join("")}</div></div>`).join("")}`}
+function lab(){const T=["1.2","2.1","2.2","3.1","3.2"],N=["Rule reasoner","Workers","Messaging","Negotiation","Utility"];
+const tabs=`<div class="tabs">${T.map((t,i)=>`<div class="tab ${S.tab==t?"on":""}" data-a="tab" data-v="${t}">${t} · ${N[i]}</div>`).join("")}</div>`;let b="";
+if(S.tab=="1.2"){b=`<div class="card"><h3>Event → Condition → Action</h3><div class="wrap"><table><tr><th>Event</th><th>Condition</th><th>Agent action</th><th></th></tr>${rules.map((r,i)=>`<tr ${i==S.ev?'style="background:var(--bg)"':""}><td><code>${r[0]}</code></td><td>${r[1]}</td><td>${r[2]}</td><td>${i==S.ev?bad("b-wa","FIRED"):""}</td></tr>`).join("")}</table></div><p><button class="btn" data-a="ev">Fire next event</button></p></div>`}
+if(S.tab=="2.1"){b=`<div class="card"><h3>Background monitoring workers</h3><div class="wrap"><table><tr><th>Worker</th><th>Status</th><th>Last run</th><th>Latency</th><th>Event</th></tr>${workers.map((w,i)=>`<tr><td>${w[0]}</td><td>${bad("b-ok","RUNNING")}</td><td>${S.tick*5+i*2}s ago</td><td>${w[1]+(S.tick*37%200)} ms</td><td><code>${w[2]}</code></td></tr>`).join("")}</table></div><p><button class="btn" data-a="tick">Run workers again</button></p></div>`}
+if(S.tab=="2.2"){b=`<div class="card"><h3>Flight Agent → Planner Agent</h3><pre>${JSON.stringify({type:"FLIGHT_CANCELLED",sender:"flight_agent",receiver:"planner_agent",payload:{flight:"6E-512",reason:"weather"},ts:"2026-11-12T08:30:00Z"},null,2)}</pre><div style="text-align:center">↓ autonomous response</div><pre>${JSON.stringify({type:"REQUEST_ALTERNATIVES",sender:"planner_agent",receiver:"flight_agent",payload:{max_price:600,date:"2026-11-12"}},null,2)}</pre></div>`}
+if(S.tab=="3.1"){const P=[["CFP","Buyer asks for Chennai→Goa, budget $600"],["PROPOSE","Airline offers $540"],["COUNTER","Buyer counters $480"],["ACCEPT","Airline accepts $500"],["CONFIRM","Buyer confirms booking (mock)"]];
+b=`<div class="card"><h3>Buyer Agent ⇄ Airline Supplier Agent</h3>${P.map((p,i)=>`<div style="padding:8px 0;opacity:${i<=S.neg?1:.35}"><span class="step ${i==S.neg?"on":""}">${p[0]}</span> ${p[1]}</div>`).join("")}<button class="btn" data-a="neg">${S.neg<4?"Next message":"Restart"}</button></div>`}
+if(S.tab=="3.2"){const s=scored(),ok=s.filter(x=>x.u!=null).sort((a,b)=>b.u-a.u),w=ok[0];
+b=`<div class="card"><h3>Candidate evaluation</h3><p class="mu">Rules: cost ≤ $${BUD}, travel ≤ ${MAXH}h. U = ${W.c.toFixed(2)}·cost + ${W.t.toFixed(2)}·time + ${W.p.toFixed(2)}·preference + ${W.k.toFixed(2)}·comfort.</p><div class="wrap"><table><tr><th>Option</th><th>Cost</th><th>Hours</th><th>Status</th><th>Utility</th></tr>${s.map(x=>`<tr class="${x==w?"win":""}"><td>${x.n}</td><td>$${x.c}</td><td>${x.h}</td><td>${x.u==null?bad("b-er","Rejected: "+x.why):bad("b-ok","Feasible")}</td><td>${x.u==null?"—":`<div style="display:flex;gap:8px;align-items:center"><div class="bar"><i style="width:${x.u*100}%"></i></div>${x.u.toFixed(3)}</div>`}</td></tr>`).join("")}</table></div></div>
+<div class="card"><h3>Selected: ${w.n} ${bad("b-ok","Max utility")}</h3><p>Ranked ${ok.length} feasible options; ${s.length-ok.length} rejected. This option scored ${w.u.toFixed(3)}, beating runner-up “${ok[1].n}” (${ok[1].u.toFixed(3)}) by balancing a low cost ($${w.c}) with a short trip (${w.h}h).</p></div>`}
+return tabs+b}
+function render(){const h=location.hash.slice(1);let k=h.startsWith("trip")?"trip":h=="plan"||h=="lab"?h:"";
+const t={"":"Dashboard",plan:"Plan Trip",trip:"Trip Details",lab:"Agent Lab"}[k];$("#ttl").textContent=t;document.title=t+" · AI Trip Planner";
+$("#v").innerHTML=k==""?dash():k=="plan"?plan():k=="lab"?lab():trip(h.split("-")[1]);
+const n=R.map(r=>`<a href="#${r[0]}" class="${(r[0]==k||(k=="trip"&&r[0]==""))?"on":""}">${r[1]}</a>`).join("");$("#nav").innerHTML=n;$("#mob").innerHTML=n}
+document.addEventListener("click",e=>{const a=e.target.closest("[data-a]");if(!a)return;const x=a.dataset.a;
+if(x=="tab")S.tab=a.dataset.v;if(x=="replan")S.replan=!S.replan;if(x=="ev")S.ev=(S.ev+1)%rules.length;if(x=="tick")S.tick++;if(x=="neg")S.neg=S.neg<4?S.neg+1:0;render()});
+const CH=[],esc=s=>s.replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+function say(w,t){CH.push([w,t]);const l=$("#cl");l.hidden=false;l.innerHTML=CH.slice(-6).map(m=>`<div class="m ${m[0]}"><b>${m[0]=="u"?"You":"Agent"}:</b> ${m[1]}</div>`).join("");l.scrollTop=1e9}
+function go(h){const same=location.hash.slice(1)==h;location.hash=h;if(same)render()}
+function best(){const o=scored().filter(x=>x.u!=null).sort((a,b)=>b.u-a.u);return o.length?`Best option now: ${o[0].n} (utility ${o[0].u.toFixed(3)}, $${o[0].c}, ${o[0].h}h).`:"No feasible option under these limits."}
+function agent(raw){const t=raw.toLowerCase(),b=t.match(/(?:budget|under|\$)\s*\$?(\d+)/),h=t.match(/(\d+)\s*(?:h\b|hr|hour)/),m=[];let lab=0;
+if(/reset|undo/.test(t)){S.replan=false;BUD=600;MAXH=12;Object.assign(W,{c:.4,t:.25,p:.2,k:.15});trips[0].b=600;go(location.hash.slice(1));return "Everything is back to the defaults."}
+if(b){BUD=+b[1];trips[0].b=BUD;m.push(`Budget set to $${BUD}; options are re-checked.`);lab=1}
+if(h){MAXH=+h[1];m.push(`Max travel time set to ${MAXH}h.`);lab=1}
+if(/cheap|save|low cost/.test(t)){Object.assign(W,{c:.6,t:.15,p:.15,k:.1});m.push("Utility weights shifted toward cost.");lab=1}
+else if(/fast|quick|short/.test(t)){Object.assign(W,{c:.2,t:.55,p:.15,k:.1});m.push("Utility weights shifted toward speed.");lab=1}
+else if(/comfort|luxur/.test(t)){Object.assign(W,{c:.2,t:.15,p:.15,k:.5});m.push("Utility weights shifted toward comfort.");lab=1}
+if(lab){S.tab="3.2";go("lab");return m.join(" ")+" "+best()}
+if(/budget/.test(t))return "Give me an amount, e.g. “budget 400”.";
+if(/rain|storm/.test(t)){S.replan=true;go("trip-goa");return "PERCEIVE: HEAVY_RAIN → rule BAD_WEATHER → REPLAN_OUTDOOR_ACTIVITY. Day 2 outdoor stop replaced by an indoor one."}
+if(/cancel/.test(t)){S.tab="2.2";go("lab");return "FLIGHT_CANCELLED received; the planner replied REQUEST_ALTERNATIVES."}
+if(/negotiat|airline|deal/.test(t)){S.tab="3.1";S.neg=0;go("lab");return "Opened the negotiation. Press Next message to step through it."}
+if(/worker|thread/.test(t)){S.tab="2.1";S.tick++;go("lab");return "Workers ran again; see the new latencies."}
+if(/rule/.test(t)){S.tab="1.2";S.ev=(S.ev+1)%rules.length;go("lab");return "Fired the next environmental rule."}
+if(/utility|best|option|rank/.test(t)){S.tab="3.2";go("lab");return best()}
+if(/jaipur/.test(t)){go("trip-jaipur");return "Opened the Jaipur trip."}
+if(/goa|trip|itinerary/.test(t)){go("trip-goa");return "Opened the Goa itinerary."}
+if(/plan|new/.test(t)){go("plan");return "Opened the planning form."}
+if(/dashboard|home/.test(t)){go("");return "Back on the dashboard."}
+return "I can change the plan from chat. Try: “it’s raining”, “budget 400”, “faster options”, “max 8 hours”, “flight cancelled” or “reset”."}
+$("#cf").addEventListener("submit",e=>{e.preventDefault();const i=$("#ci"),v=i.value.trim();if(!v)return;i.value="";say("u",esc(v));setTimeout(()=>say("a",agent(v)),350)});
+$("#cq").innerHTML=["It’s raining","Budget 400","Faster options","Max 8 hours","Flight cancelled","Reset"].map(q=>`<span data-q="${q}">${q}</span>`).join("");
+$("#cq").addEventListener("click",e=>{const q=e.target.dataset.q;if(q){$("#ci").value=q;$("#cf").requestSubmit()}});
+say("a","Hi! Tell me what changed and I will update the plan. Try a chip below.");
+addEventListener("hashchange",render);render();
+</script></body></html>
